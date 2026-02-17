@@ -18,12 +18,7 @@ class MainApp extends StatelessWidget {
     // Instantiate ArticleViewModel to test http request
     final viewModel = ArticleViewModel(ArticleModel());
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: const Text("Wikipedia Flutter")),
-        body: const Center(child: Text("Loading...")),
-      ),
-    );
+    return MaterialApp(home: ArticleView());
   }
 }
 
@@ -98,7 +93,7 @@ class ArticleView extends StatelessWidget {
             // The summary must be non-null in this switch case.
             (false, Summary summary, null) => ArticlePage(
               summary: summary,
-              nextArticleCallback: articleViewModel.getRandomArticleSummary(),
+              nextArticleCallback: articleViewModel.getRandomArticleSummary,
             ),
           };
         },
