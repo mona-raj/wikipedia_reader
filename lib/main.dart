@@ -72,3 +72,53 @@ class ArticleViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class ArticleView extends StatelessWidget {
+  ArticleView({super.key});
+
+  final articleViewModel = ArticleViewModel(ArticleModel());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Wikipedia Flutter")),
+      body: ListenableBuilder(
+        listenable: articleViewModel,
+        builder: (context, child) {
+          return switch ((
+            articleViewModel.loading,
+            articleViewModel.summary,
+            articleViewModel.errorMessage,
+          )) {
+            (true, _, _) => CircularProgressIndicator(),
+            (false, _, String message) => Center(child: Text(message)),
+            (false, null, null) => Center(
+              child: Text('An unknown error has occurred.'),
+            ),
+            // The summary must be non-null in this switch case.
+            (false, Summary summary, null) => ArticlePage(
+              summary: summary,
+              nextArticleCallback: articleViewModel.getRandomArticleSummary(),
+            ),
+          };
+        },
+      ),
+    );
+  }
+}
+
+class ArticlePage extends StatelessWidget {
+  const ArticlePage({
+    super.key,
+    required this.summary,
+    required this.nextArticleCallback,
+  });
+
+  final Summary summary;
+  final Future<void> nextArticleCallback;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Article content will be displayed here'));
+  }
+}
